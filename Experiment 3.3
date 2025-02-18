@@ -1,0 +1,73 @@
+import java.util.*;
+
+public class UniversityEnrollmentSystem {
+
+    // Map to track courses and their current enrollment counts
+    static Map<String, Integer> courseEnrollment = new HashMap<>();
+    // Map to track student courses completion (i.e., whether they've completed a course or not)
+    static Map<String, Boolean> studentCourses = new HashMap<>();
+    
+    static final int MAX_ENROLLMENT = 2;  // Maximum number of students allowed per course
+
+    public static void main(String[] args) {
+        // Pre-populate courses and student course completion
+        studentCourses.put("Core Java", true);  // Student has completed Core Java
+        studentCourses.put("Advanced Java", false);  // Student has not completed Advanced Java
+
+        // Initialize course enrollments (set to 0 initially)
+        courseEnrollment.put("Advanced Java", 0);
+        courseEnrollment.put("Core Java", 0);
+
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            // Ask for the course the student wants to enroll in
+            System.out.print("Enroll in Course: ");
+            String course = scanner.nextLine();
+
+            // Check if the course exists in our enrollment system
+            if (!courseEnrollment.containsKey(course)) {
+                System.out.println("Error: Course not found.");
+                return;
+            }
+
+            // Check if the course is full
+            if (courseEnrollment.get(course) >= MAX_ENROLLMENT) {
+                throw new CourseFullException("Error: Course " + course + " is full.");
+            }
+
+            // Check if the student has completed the prerequisite (if any)
+            if (course.equals("Advanced Java") && !studentCourses.getOrDefault("Core Java", false)) {
+                throw new PrerequisiteNotMetException("Error: PrerequisiteNotMetException - Complete Core Java before enrolling in Advanced Java.");
+            }
+
+            // Enroll the student in the course
+            courseEnrollment.put(course, courseEnrollment.get(course) + 1);
+            studentCourses.put(course, true);  // Mark the course as completed by the student
+            System.out.println("Enrollment successful in " + course + ". Current enrollment: " + courseEnrollment.get(course));
+
+        } catch (CourseFullException e) {
+            // Handle course full exception
+            System.out.println(e.getMessage());
+        } catch (PrerequisiteNotMetException e) {
+            // Handle prerequisite not met exception
+            System.out.println(e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+}
+
+// Custom exception for course full scenario
+class CourseFullException extends Exception {
+    public CourseFullException(String message) {
+        super(message);
+    }
+}
+
+// Custom exception for unmet prerequisites
+class PrerequisiteNotMetException extends Exception {
+    public PrerequisiteNotMetException(String message) {
+        super(message);
+    }
+}
