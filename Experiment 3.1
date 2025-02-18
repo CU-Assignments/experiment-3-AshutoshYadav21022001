@@ -1,0 +1,36 @@
+import java.util.Scanner;
+
+public class SquareRootCalculator {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        try {
+            // Ask for user input
+            System.out.print("Enter a number: ");
+            String input = scanner.nextLine();
+            
+            // Parse the input to a double
+            double number = Double.parseDouble(input);
+            
+            // Check if the number is negative
+            if (number < 0) {
+                throw new IllegalArgumentException("Cannot calculate the square root of a negative number.");
+            }
+            
+            // Calculate and display the square root
+            double squareRoot = Math.sqrt(number);
+            System.out.println("The square root of " + number + " is " + squareRoot);
+            
+        } catch (NumberFormatException e) {
+            // Catch non-numeric input
+            System.out.println("Error: Invalid input, please enter a valid number.");
+            
+        } catch (IllegalArgumentException e) {
+            // Catch negative number
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+}
